@@ -340,7 +340,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "aa01c1267aa1cbd8542353f1f67c058a64f7df71d58e6791948b43369b6f0019"
+content-hash = "6c3e295630737c68906e40d7d9f350fb9be05adbef61161331010ec2bb0a27eb"
 
 [metadata.files]
 astroid = [

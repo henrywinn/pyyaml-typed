@@ -1,4 +1,5 @@
 import random
+import sys
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
@@ -131,3 +132,43 @@ def test_optional_in_list():
     yml = yaml.safe_dump(expected)
     loaded = load(yml, List[List[Optional[__Simple]]])
     assert loaded == [[__Simple(1, 2)]]
+
+
+skip_literal = mark.skipif(sys.version_info < (3, 9), reason="requires python 3.9+")
+
+
+@skip_literal
+def test_with_literal():
+    from typing import Literal
+
+    @dataclass
+    class WithLiteral:
+        default_section: Literal["one", "two", "unknown"] = "unknown"
+        other: int = 0
+
+    yml = """
+default_section: one
+"""
+
+    loaded = load(yml, WithLiteral)
+
+    assert loaded == WithLiteral("one")
+
+
+@skip_literal
+def test_with_literal_heterogeneous():
+    from typing import Literal
+
+    @dataclass
+    class WithLiteral:
+        default_section: Literal[1, "2", {1: 2}] = 1
+        other: int = 0
+
+    yml = """
+default_section:
+    1: 2
+"""
+
+    loaded = load(yml, WithLiteral)
+
+    assert loaded == WithLiteral({1: 2})

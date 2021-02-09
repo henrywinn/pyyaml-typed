@@ -71,14 +71,22 @@ def _add_path_resolvers(typ: TypeOrGeneric, loader: Type[FullLoader], base_path:
             if len(args) == 2 and issubclass(args[1], type(None)):  # given type is Optional
                 _add_single_cls_loader(args[0], loader, base_path)
                 return
-            else:
-                raise TypeError(f"Only Optional[...] is allowed but"
-                                f"Union[{', '.join(t.__name__ for t in args)}] was given")
+            raise TypeError(f"Only Optional[...] is allowed but"
+                            f"Union[{', '.join(t.__name__ for t in args)}] was given")
         if typ in [list, tuple, set, frozenset]:
             el_type = args[0]  # type: type
             base_path.append((SequenceNode, False))
             _add_path_resolvers(el_type, loader, base_path)
             return
+        try:
+            from typing import Literal  # pylint: disable=import-outside-toplevel
+            if typ is Literal:
+                # args are not types in this case, but possible values
+                el_type = type(args[0])  # consider literal homogenous
+                _add_single_cls_loader(el_type, loader, base_path)
+                return
+        except ImportError:  # pragma: no cover
+            pass
         if issubclass(typ, dict):
             el_type = args[1]
             base_path.append((MappingNode, False))
