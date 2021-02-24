@@ -32,7 +32,7 @@ will create yaml:
   my_fld_2: "nice"
 ```
 
-and in the other direction: 
+and in the opposite direction: 
 ```python
 from typing import List
 
