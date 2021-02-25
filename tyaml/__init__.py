@@ -6,7 +6,6 @@ from typing import (
 
 import yaml
 
-from .dumper import SpecialDumper as __SpecialDumper
 from .loader import (
     TypeOrGeneric as __TypeOrGeneric,
     special_loader as __special_loader
@@ -16,11 +15,15 @@ LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(logging.WARNING)
 
 
-def dump(data, stream=None, **kwargs):
+def dump(data, stream=None, output_null_optionals=True, **kwargs):
     """Dump data with yaml.dump with tyaml.SpecialDumper as dumper"""
     _k_dumper = kwargs.pop("Dumper", None)
     if _k_dumper is not None:
         LOGGER.warning("'Dumper' argument will be ignored")  # pragma: nocover
+    if output_null_optionals:
+        from .dumper import OutputOptionalNullsDumper as __SpecialDumper
+    else:
+        from .dumper import NoOutputOptionalNullsDumper as __SpecialDumper
     return yaml.dump(data, stream, Dumper=__SpecialDumper, **kwargs)
 
 
