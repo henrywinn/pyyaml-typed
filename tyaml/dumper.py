@@ -1,4 +1,7 @@
-from yaml import Dumper
+try:
+    from yaml import CDumper as Dumper
+except ImportError:  # pragma: no cover
+    from yaml import Dumper
 
 from tyaml.types import get_mappings
 

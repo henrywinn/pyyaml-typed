@@ -1,7 +1,11 @@
 from copy import deepcopy
 from typing import Any, Type, Union, _GenericAlias, _SpecialForm
 
-from yaml import FullLoader, MappingNode, SequenceNode
+from yaml import MappingNode, SequenceNode
+try:
+    from yaml import CFullLoader as FullLoader
+except ImportError:  # pragma: no cover
+    from yaml import FullLoader
 
 from tyaml.types import get_mappings
 
